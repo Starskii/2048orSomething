@@ -20,9 +20,6 @@ class View:
             running = self.presenter.handle_events()
             self.clock.tick(1000/self.FRAME_CAP)
 
-    def get_events(self):
-        return pygame.event.get()
-
     def render_active_screen(self):
         self.active_screen.render()
         self.clock.tick(self.FRAME_CAP)

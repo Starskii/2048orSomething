@@ -8,7 +8,8 @@ class SplashViewModel:
             "highlight_color": (255, 0, 0)
         }
         self.dialogue_options = [
-            {"text": "Start Game", "isSelected": True},
+            {"text": "New Game", "isSelected": True},
+            {"text": "Continue Game", "isSelected": False},
             {"text": "Options", "isSelected": False},
             {"text": "Quit", "isSelected": False}
         ]

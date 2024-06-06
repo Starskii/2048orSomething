@@ -17,7 +17,11 @@ class SplashScreenHandler(AbstractHandler):
                 selected_option = self.model.dialogue_options[self.model.current_selection]
                 if selected_option["text"] == "Quit":
                     return False
-                elif selected_option["text"] == "Start Game":
+                elif selected_option["text"] == "New Game":
+                    self.presenter.start_new_game()
+                elif selected_option["text"] == "Continue Game":
                     self.presenter.transition_view("GameView")
                     return True
+                elif selected_option["text"] == "Options":
+                    self.presenter.transition_view("OptionsView")
         return True
