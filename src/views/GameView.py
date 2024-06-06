@@ -26,7 +26,7 @@ class GameView(AbstractView):
             for y in range(self.game_board.height):
                 block = self.game_board.get(x, y)
                 if block.value != 0:
-                    color = (255, 0, 0)  # Adjust color based on block value
+                    color = self.game_board.block_colors[block.value]  # Adjust color based on block value
                     rect = pygame.Rect(
                         self.board_x + x * self.block_size,
                         self.board_y + y * self.block_size,
