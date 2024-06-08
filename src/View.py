@@ -18,11 +18,10 @@ class View:
         while running:
             self.render_active_screen()
             running = self.presenter.handle_events()
-            self.clock.tick(1000/self.FRAME_CAP)
 
     def render_active_screen(self):
         self.active_screen.render()
-        self.clock.tick(self.FRAME_CAP)
+        self.clock.tick(1000/self.FRAME_CAP)
 
     def set_active_screen(self, screen):
         self.active_screen = screen

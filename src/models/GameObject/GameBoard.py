@@ -9,6 +9,11 @@ class GameBoard:
         self.spawn_count = spawn_count
         self.board = [[Block() for _ in range(self.width)] for _ in range(self.height)]
         self.score = 0
+        self.spawn_variants = {
+            2: 9,
+            4: 1
+        }
+        self.spawn_block()
         self.spawn_block()
         self.block_colors = {
             2: (233, 86, 86),
@@ -43,12 +48,22 @@ class GameBoard:
             raise IndexError("Index out of bounds")
 
     def spawn_block(self):
+        probability_total = sum(self.spawn_variants.values())
+        rand_value = random.randint(1, probability_total)
+        current_value = 0
+        block_value = 2
+        for k in self.spawn_variants.keys():
+            current_value += self.spawn_variants[k]
+            if current_value <= rand_value:
+                block_value = k
         spawned = 0
+
         while spawned < self.spawn_count:
             rand_x = random.randint(0, self.width - 1)
             rand_y = random.randint(0, self.height - 1)
             if self.get(rand_x, rand_y).value == 0:
-                self.get(rand_x, rand_y).value = 2
+                self.get(rand_x, rand_y).value = block_value
+                print(block_value)
                 spawned += 1
 
     def down_press(self):
@@ -77,6 +92,8 @@ class GameBoard:
                         self.score += current_block.value
                         current_block.value = 0
                         moved = True
+                        break
+                    elif target_block.value != current_block.value and current_block.value != 0:
                         break
         if moved:
             self.spawn_block()
@@ -108,6 +125,8 @@ class GameBoard:
                         current_block.value = 0
                         moved = True
                         break
+                    elif target_block.value != current_block.value and current_block.value != 0:
+                        break
         if moved:
             self.spawn_block()
 
@@ -137,6 +156,8 @@ class GameBoard:
                         self.score += current_block.value
                         current_block.value = 0
                         moved = True
+                        break
+                    elif target_block.value != current_block.value and current_block.value != 0:
                         break
         if moved:
             self.spawn_block()
@@ -168,7 +189,7 @@ class GameBoard:
                         current_block.value = 0
                         moved = True
                         break
+                    elif target_block.value != current_block.value and current_block.value != 0:
+                        break
         if moved:
             self.spawn_block()
-
-
