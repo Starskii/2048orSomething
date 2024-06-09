@@ -99,16 +99,10 @@ class GameBoard:
 
         return y_mergeable_blocks
 
-
-
-    def detect_loss(self, isVertical):
-        empty_count = self.get_empty_blocks()
-        merge_count = 0
-        if isVertical:
-            merge_count = self.vertical_merge_count()
-        else:
-            merge_count = self.horizontal_merge_count()
-        return (empty_count + merge_count) < self.spawn_count
+    def detect_loss(self):
+        if ((self.horizontal_merge_count() + self.get_empty_blocks()) < self.spawn_count
+                and (self.vertical_merge_count() + self.get_empty_blocks()) < self.spawn_count):
+            self.has_lost = True
 
     def get_empty_blocks(self):
         empty_blocks = 0
@@ -120,8 +114,8 @@ class GameBoard:
 
     def spawn_block(self):
         if self.get_empty_blocks() < self.spawn_count:
-            print("you lose")
-            print(self.has_lost)
+            self.has_lost = True
+            return
         self.turns += 1
         probability_total = sum(self.spawn_variants.values())
         rand_value = random.randint(1, probability_total)
@@ -169,7 +163,6 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
-        self.has_lost = self.detect_loss(True)
         if moved:
             if not self.has_lost:
                 self.spawn_block()
@@ -203,7 +196,6 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
-        self.has_lost = self.detect_loss(True)
         if moved:
             if not self.has_lost:
                 self.spawn_block()
@@ -237,7 +229,6 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
-        self.has_lost = self.detect_loss(False)
         if moved:
             if not self.has_lost:
                 self.spawn_block()
@@ -271,7 +262,6 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
-        self.has_lost = self.detect_loss(False)
         if moved:
             if not self.has_lost:
                 self.spawn_block()

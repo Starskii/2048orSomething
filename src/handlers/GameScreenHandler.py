@@ -9,6 +9,7 @@ class GameScreenHandler(AbstractHandler):
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
+            self.model.detect_loss()
             if event.key == pygame.K_DOWN:
                 self.model.down_press()
             elif event.key == pygame.K_UP:
