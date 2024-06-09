@@ -17,4 +17,6 @@ class GameScreenHandler(AbstractHandler):
                 self.model.right_press()
             elif event.key == pygame.K_LEFT:
                 self.model.left_press()
+        if self.model.has_lost:
+            self.presenter.transition_view("Lost")
         return True

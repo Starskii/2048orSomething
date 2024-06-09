@@ -9,6 +9,9 @@ class GameBoard:
         self.spawn_count = spawn_count
         self.board = [[Block() for _ in range(self.width)] for _ in range(self.height)]
         self.score = 0
+        self.two_spawn = 0
+        self.four_spawn = 0
+        self.turns = -2
         self.spawn_variants = {
             2: 9,
             4: 1
@@ -34,6 +37,7 @@ class GameBoard:
             65536: (123, 57, 139),
             131072: (71, 21, 58),
         }
+        self.has_lost = False
 
     def get(self, x, y):
         if 0 <= x < self.width and 0 <= y < self.height:
@@ -47,7 +51,78 @@ class GameBoard:
         else:
             raise IndexError("Index out of bounds")
 
+    def horizontal_merge_count(self):
+        x_mergeable_blocks = 0
+        # Count merge horizontal
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.get(x, y).value == 0 or self.get(x, y).mergeable:
+                    continue
+                for xn in range(x + 1, self.width):
+                    if self.get(xn, y).value == 0 or self.get(xn, y).mergeable:
+                        continue
+                    elif self.get(xn, y).value != self.get(x, y).value:
+                        break
+                    elif self.get(xn, y).value == self.get(x, y).value:
+                        self.get(x, y).mergeable = True
+                        self.get(xn, y).mergeable = True
+                        x_mergeable_blocks += 1
+                        break
+
+        for x in range(self.width):
+            for y in range(self.height):
+                self.get(x, y).mergeable = False
+
+        return x_mergeable_blocks
+
+    def vertical_merge_count(self):
+        y_mergeable_blocks = 0
+
+        # Count merge vertical
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.get(x, y).value == 0 or self.get(x, y).mergeable:
+                    continue
+                for yn in range(y + 1, self.height):
+                    if self.get(x, yn).value == 0 or self.get(x, yn).mergeable:
+                        continue
+                    elif self.get(x, yn).value != self.get(x, y).value:
+                        break
+                    elif self.get(x, yn).value == self.get(x, y).value:
+                        self.get(x, y).mergeable = True
+                        self.get(x, yn).mergeable = True
+                        y_mergeable_blocks += 1
+                        break
+        for x in range(self.width):
+            for y in range(self.height):
+                self.get(x, y).mergeable = False
+
+        return y_mergeable_blocks
+
+
+
+    def detect_loss(self, isVertical):
+        empty_count = self.get_empty_blocks()
+        merge_count = 0
+        if isVertical:
+            merge_count = self.vertical_merge_count()
+        else:
+            merge_count = self.horizontal_merge_count()
+        return (empty_count + merge_count) < self.spawn_count
+
+    def get_empty_blocks(self):
+        empty_blocks = 0
+        for x in range(self.width):
+            for y in range(self.height):
+                if self.get(x, y).value == 0:
+                    empty_blocks += 1
+        return empty_blocks
+
     def spawn_block(self):
+        if self.get_empty_blocks() < self.spawn_count:
+            print("you lose")
+            print(self.has_lost)
+        self.turns += 1
         probability_total = sum(self.spawn_variants.values())
         rand_value = random.randint(1, probability_total)
         current_value = 0
@@ -63,7 +138,6 @@ class GameBoard:
             rand_y = random.randint(0, self.height - 1)
             if self.get(rand_x, rand_y).value == 0:
                 self.get(rand_x, rand_y).value = block_value
-                print(block_value)
                 spawned += 1
 
     def down_press(self):
@@ -95,8 +169,10 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
+        self.has_lost = self.detect_loss(True)
         if moved:
-            self.spawn_block()
+            if not self.has_lost:
+                self.spawn_block()
 
     def up_press(self):
         width_max = self.width - 1
@@ -127,8 +203,10 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
+        self.has_lost = self.detect_loss(True)
         if moved:
-            self.spawn_block()
+            if not self.has_lost:
+                self.spawn_block()
 
     def right_press(self):
         width_max = self.width - 1
@@ -159,8 +237,10 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
+        self.has_lost = self.detect_loss(False)
         if moved:
-            self.spawn_block()
+            if not self.has_lost:
+                self.spawn_block()
 
     def left_press(self):
         width_max = self.width - 1
@@ -191,5 +271,7 @@ class GameBoard:
                         break
                     elif target_block.value != current_block.value and current_block.value != 0:
                         break
+        self.has_lost = self.detect_loss(False)
         if moved:
-            self.spawn_block()
+            if not self.has_lost:
+                self.spawn_block()

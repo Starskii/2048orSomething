@@ -9,16 +9,18 @@ from src.handlers.GameScreenHandler import GameScreenHandler
 from src.views.OptionsView import OptionsView
 from src.handlers.OptionsHandler import OptionsHandler
 from src.models.OptionsModel import OptionsModel
-
+from src.models.LostModel import LostModel
+from src.views.LostView import LostView
+from src.handlers.LostHandler import LostHandler
 class Presenter:
     def __init__(self):
         self.view = View(self)
         splashViewModel = SplashViewModel()
         self.optionsModel = OptionsModel()
-        gameBoard = GameBoard(self.optionsModel.width, self.optionsModel.height, self.optionsModel.spawn_count)
+        self.gameBoard = GameBoard(self.optionsModel.width, self.optionsModel.height, self.optionsModel.spawn_count)
         self.view_handler_lookup = {
             "SplashView": [SplashView(self.view.screen, splashViewModel), SplashScreenHandler(self, splashViewModel), splashViewModel],
-            "GameView": [GameView(self.view.screen, gameBoard), GameScreenHandler(self, gameBoard), gameBoard],
+            "GameView": [GameView(self.view.screen, self.gameBoard), GameScreenHandler(self, self.gameBoard), self.gameBoard],
             "OptionsView": [OptionsView(self.view.screen, self.optionsModel), OptionsHandler(self, self.optionsModel), self.optionsModel]
         }
         self.current_handler = None
@@ -43,16 +45,22 @@ class Presenter:
         self.view.render_active_screen()
 
     def transition_view(self, title):
-        view = self.view_handler_lookup[title][0]
-        handler = self.view_handler_lookup[title][1]
-        self.set_current_handler(handler)
-        self.view.set_active_screen(view)
+        if title == "Lost":
+            model = LostModel(self.gameBoard)
+            view = LostView(self.view.screen, model)
+            handler = LostHandler(self, model)
+            self.current_handler = handler
+            self.view.set_active_screen(view)
+        else:
+            view = self.view_handler_lookup[title][0]
+            handler = self.view_handler_lookup[title][1]
+            self.set_current_handler(handler)
+            self.view.set_active_screen(view)
 
     def set_current_handler(self, handler):
         self.current_handler = handler
 
     def start_new_game(self):
-        print("got here")
-        gameBoard = GameBoard(self.optionsModel.width, self.optionsModel.height, self.optionsModel.spawn_count)
-        self.view_handler_lookup["GameView"] = [GameView(self.view.screen, gameBoard), GameScreenHandler(self, gameBoard), gameBoard]
+        self.gameBoard = GameBoard(self.optionsModel.width, self.optionsModel.height, self.optionsModel.spawn_count)
+        self.view_handler_lookup["GameView"] = [GameView(self.view.screen, self.gameBoard), GameScreenHandler(self, self.gameBoard), self.gameBoard]
         self.transition_view("GameView")
