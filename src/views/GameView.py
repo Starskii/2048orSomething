@@ -1,5 +1,5 @@
 import pygame
-from src.views.AbstractView import AbstractView
+from views.AbstractView import AbstractView
 
 
 class GameView(AbstractView):

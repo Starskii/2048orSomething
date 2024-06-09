@@ -1,7 +1,7 @@
-from src.views.AbstractView import AbstractView
+from views.AbstractView import AbstractView
 import pygame
 import random
-from src.models.SplashViewModel import SplashViewModel
+from models.SplashViewModel import SplashViewModel
 
 class OptionsView(AbstractView):
     def __init__(self, screen, model):

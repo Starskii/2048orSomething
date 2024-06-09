@@ -1,5 +1,5 @@
 import pygame
-from src.handlers.AbstractHandler import AbstractHandler
+from handlers.AbstractHandler import AbstractHandler
 
 
 class LostHandler(AbstractHandler):

@@ -1,4 +1,4 @@
-from src.models.GameObject.Block import Block
+from models.GameObject.Block import Block
 import random
 
 

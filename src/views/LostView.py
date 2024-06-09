@@ -1,6 +1,6 @@
-from src.views.AbstractView import AbstractView
+from views.AbstractView import AbstractView
 import pygame
-from src.models.LostModel import LostModel
+from models.LostModel import LostModel
 
 class LostView(AbstractView):
     def __init__(self, screen, model: LostModel):

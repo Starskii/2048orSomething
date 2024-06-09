@@ -1,5 +1,5 @@
 import pygame
-from src.views.SplashView import SplashView
+from views.SplashView import SplashView
 
 
 class View:

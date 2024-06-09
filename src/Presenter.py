@@ -1,17 +1,17 @@
 import pygame
-from src.handlers.SplashScreenHandler import SplashScreenHandler
-from src.views.SplashView import SplashView
-from src.View import View
-from src.models.SplashViewModel import SplashViewModel
-from src.models.GameObject.GameBoard import GameBoard
-from src.views.GameView import GameView
-from src.handlers.GameScreenHandler import GameScreenHandler
-from src.views.OptionsView import OptionsView
-from src.handlers.OptionsHandler import OptionsHandler
-from src.models.OptionsModel import OptionsModel
-from src.models.LostModel import LostModel
-from src.views.LostView import LostView
-from src.handlers.LostHandler import LostHandler
+from handlers.SplashScreenHandler import SplashScreenHandler
+from views.SplashView import SplashView
+from View import View
+from models.SplashViewModel import SplashViewModel
+from models.GameObject.GameBoard import GameBoard
+from views.GameView import GameView
+from handlers.GameScreenHandler import GameScreenHandler
+from views.OptionsView import OptionsView
+from handlers.OptionsHandler import OptionsHandler
+from models.OptionsModel import OptionsModel
+from models.LostModel import LostModel
+from views.LostView import LostView
+from handlers.LostHandler import LostHandler
 class Presenter:
     def __init__(self):
         self.view = View(self)
